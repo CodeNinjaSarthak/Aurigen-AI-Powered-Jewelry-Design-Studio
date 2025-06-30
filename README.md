@@ -78,7 +78,10 @@ streamlit run app.py
 ```
 
 <h3> Watch it in action: <h3>
-<video width="600" controls> <source src="Assets/Aurigen_video.mp4" type="video/mp4"> Your browser does not support the video tag. </video>
+https://drive.google.com/file/d/1UnwEjkt5vYjoJlum6DXiLO72CQdbBcFo/view?usp=sharing
+
+<h3>Download the trained model from below link and place it in fine-tuned-weights folder</h3>
+https://drive.google.com/drive/folders/13bx0xMu9Py2vFqFG8ocny2YVamw7EQOX?usp=sharing
 
 ## 👥 Contributors
 
