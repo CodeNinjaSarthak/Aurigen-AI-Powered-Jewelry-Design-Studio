@@ -80,6 +80,9 @@ streamlit run app.py
 <h3> Watch it in action: <h3>
 https://drive.google.com/file/d/1UnwEjkt5vYjoJlum6DXiLO72CQdbBcFo/view?usp=sharing
 
+https://github.com/user-attachments/assets/cd38b971-ac3b-485e-b4b5-b23f650ea11d
+
+
 <h3>Download the trained model from below link and place it in fine-tuned-weights folder</h3>
 https://drive.google.com/drive/folders/13bx0xMu9Py2vFqFG8ocny2YVamw7EQOX?usp=sharing
 
