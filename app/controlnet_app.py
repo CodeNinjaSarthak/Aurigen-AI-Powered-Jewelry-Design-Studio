@@ -300,6 +300,9 @@ def get_pipeline():
 
 
 pipe = get_pipeline()
+if pipe is None:
+    st.error("❌ Pipeline failed to load. Please restart the session.")
+    st.stop()
 
 #######################
 # Sidebar Controls
@@ -454,4 +457,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("**System Status**")
 st.sidebar.write(f"Device: {'GPU 🔥' if torch.cuda.is_available() else 'CPU ⚙️'}")
 st.sidebar.write(f"Model: SDXL 1.0 + ControlNet")
-st.sidebar.write(f"Precision: {pipe.dtype}")
+st.sidebar.write(f"Precision: {pipe.dtype if pipe is not None else 'N/A'}")
+if st.sidebar.button("🔄 Reload Model"):
+    st.cache_resource.clear()
+    st.rerun()
