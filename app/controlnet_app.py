@@ -296,12 +296,20 @@ st.markdown(
 # Model Setup
 @st.cache_resource
 def get_pipeline():
-    return load_pipeline()
+    try:
+        return load_pipeline()
+    except Exception as e:
+        st.error(f"❌ Pipeline failed to load: {str(e)}")
+        return None
 
 
 pipe = get_pipeline()
+
 if pipe is None:
-    st.error("❌ Pipeline failed to load. Please restart the session.")
+    st.warning("⚠️ Click below to retry loading the model.")
+    if st.button("🔄 Retry Loading Model"):
+        st.cache_resource.clear()
+        st.rerun()
     st.stop()
 
 #######################
