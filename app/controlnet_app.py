@@ -1,14 +1,11 @@
-import streamlit as st
-import torch
-from diffusers import StableDiffusionXLControlNetPipeline, ControlNetModel
-from PIL import Image
-import os
 import logging
 import time
-import cv2
-import numpy as np
-
 import warnings
+
+import streamlit as st
+import torch  # kept: used in sidebar for pipe.dtype and torch.cuda.is_available()
+from models import load_pipeline
+from utils import preprocess_image
 
 warnings.filterwarnings("ignore")
 
@@ -58,54 +55,10 @@ st.markdown(
 #######################
 # Model Setup
 @st.cache_resource
-def load_model():
-    checkpoint_dir = "fine-tuned-weights"
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def get_pipeline():
+    return load_pipeline()
 
-    # Load ControlNet and Pipeline
-    controlnet = ControlNetModel.from_pretrained(
-        "diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch.float16
-    )
-
-    pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
-        "stabilityai/stable-diffusion-xl-base-1.0",
-        controlnet=controlnet,
-        torch_dtype=torch.float16,
-    ).to(device)
-
-    # Load fine-tuned weights
-    unet_checkpoint_path = os.path.join(checkpoint_dir, "unet_epoch_3.pth")
-    if os.path.exists(unet_checkpoint_path):
-        pipe.unet.load_state_dict(torch.load(unet_checkpoint_path, map_location=device))
-    return pipe
-
-pipe = load_model()
-
-#######################
-# Image Processing
-def process_image(image_input, detect_edges=True):
-    if image_input is None:
-        # Create a white background image as default
-        image = Image.new("RGB", (1024, 1024), (255, 255, 255))
-    elif hasattr(image_input, 'read'):
-        # It's a file-like object from st.file_uploader
-        image = Image.open(image_input).convert("RGB")
-    elif isinstance(image_input, Image.Image):
-        # It's already a PIL Image (e.g., from refinement)
-        image = image_input.convert("RGB")
-    else:
-        raise ValueError("Invalid image input")
-
-    if detect_edges:
-        # Apply Canny edge detection
-        image_np = np.array(image)
-        canny = cv2.Canny(image_np, 100, 200)
-        canny = canny[:, :, None]
-        canny = np.concatenate([canny, canny, canny], axis=2)
-        image = Image.fromarray(canny)
-    # Resize to 1024x1024
-    image = image.resize((1024, 1024))
-    return image
+pipe = get_pipeline()
 
 #######################
 # Sidebar Controls
@@ -129,7 +82,7 @@ with st.sidebar:
         "Upload Sketch/Reference", type=["png", "jpg", "jpeg"]
     )
     conditioning_scale = st.slider("Guidance Strength", 0.0, 2.0, 1.2)
-    detect_edges = st.checkbox("Auto-detect Edges", True)
+    apply_edges = st.checkbox("Auto-detect Edges", True)
 
     # Generation Settings
     st.markdown("---")
@@ -174,7 +127,7 @@ with col[1]:
                         with st.spinner("Refining design..."):
                             try:
                                 # Process existing image for ControlNet
-                                control_image = process_image(img, detect_edges)
+                                control_image = preprocess_image(img, apply_edges)
 
                                 # Run refinement
                                 refined = pipe(
@@ -197,7 +150,7 @@ with col[1]:
         start_time = time.time()
         with st.spinner("Crafting your designs..."):
             try:
-                control_image = process_image(reference_image, detect_edges)
+                control_image = preprocess_image(reference_image, apply_edges)
 
                 images = pipe(
                     prompt=prompt,

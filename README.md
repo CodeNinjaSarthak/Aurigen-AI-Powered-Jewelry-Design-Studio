@@ -41,6 +41,45 @@ In traditional jewelry design, users are often forced to rely on rough sketches 
 
 ---
 
+## 🗂 Module Overview
+
+| Module | Purpose | Key imports | Exports |
+|--------|---------|-------------|---------|
+| `app/controlnet_app.py` | Streamlit UI entrypoint — sidebar controls, image display, generation and refinement loops. | `streamlit`, `torch`, `models`, `utils` | — (top-level app) |
+| `models/sdxl_pipeline.py` | Loads the SDXL 1.0 + ControlNet Canny pipeline and optionally applies fine-tuned UNet weights from `fine-tuned-weights/unet_epoch_3.pth`. | `torch`, `diffusers` | `load_pipeline()` |
+| `utils/image_utils.py` | Pure image-processing helpers: Canny edge detection and image loading/resizing for ControlNet input. | `cv2`, `numpy`, `PIL` | `detect_edges()`, `preprocess_image()` |
+
+---
+
+## 📁 Project Structure
+
+```
+Aurigen/
+├── app/
+│   └── controlnet_app.py       # Streamlit UI (entrypoint)
+├── models/
+│   ├── __init__.py
+│   └── sdxl_pipeline.py        # SDXL + ControlNet pipeline loading
+├── utils/
+│   ├── __init__.py
+│   └── image_utils.py          # Image preprocessing helpers
+├── legacy/
+│   ├── old_training_file.ipynb # Archived — see legacy/README.md
+│   ├── new_training_file.ipynb # Archived — see legacy/README.md
+│   └── README.md
+├── docs/
+│   └── architecture.md
+├── fine-tuned-weights/
+│   └── README.md               # Download instructions
+├── Dataset/                    # Hosted on HuggingFace (not in repo)
+├── Assets/                     # README images
+├── requirements.txt
+├── .env.example
+└── README.md
+```
+
+---
+
 ## 📊 Dataset Overview
 
 - 📦 **Total Images**: 6000+
@@ -49,10 +88,17 @@ In traditional jewelry design, users are often forced to rely on rough sketches 
 
 ### Dataset Breakdown
 
-- **Rings**: 233 images
-- **Bracelets**: 888 images
-- **Necklaces**: 1,738 images
-- **Earrings**: 3,298 images
+### Dataset Breakdown
+
+| Category   | Images |
+|------------|-------:|
+| Earrings   | 3,298  |
+| Necklaces  | 1,738  |
+| Bracelets  | 888    |
+| Rings      | 233    |
+| **Total**  | **6,157** |
+
+**Source:** [sidd707/jewelry-design-dataset on HuggingFace](https://huggingface.co/datasets/sidd707/jewelry-design-dataset)
 
 ## <img src="Assets/Dataset.png" alt="Dataset Distribution" width="400" height="auto">
 
@@ -74,7 +120,7 @@ Want to try it yourself?
 git clone https://github.com/CodeNinjaSarthak/Aurigen-AI-Powered-Jewelry-Design-Studio.git
 cd Aurigen-AI-Powered-Jewelry-Design-Studio
 pip install -r requirements.txt
-streamlit run app.py
+streamlit run app/controlnet_app.py
 ```
 
 <h3> Watch it in action: <h3>

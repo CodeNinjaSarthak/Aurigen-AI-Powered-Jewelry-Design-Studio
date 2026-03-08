@@ -1,1 +1,37 @@
-/.DS_Store
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+
+# Environment
+.env
+
+# Model weights — download separately, never commit
+fine-tuned-weights/*.pth
+fine-tuned-weights/*.pt
+fine-tuned-weights/*.safetensors
+fine-tuned-weights/*.ckpt
+
+# Training outputs
+output/
+outputs/
+
+# Dataset images — hosted on HuggingFace, never commit
+Dataset/*.jpg
+Dataset/*.jpeg
+Dataset/*.png
+Dataset/hf_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# IDEs
+.vscode/
+.idea/
