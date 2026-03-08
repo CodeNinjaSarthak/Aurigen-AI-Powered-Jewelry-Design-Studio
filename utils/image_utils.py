@@ -4,6 +4,7 @@ Image preprocessing utilities for the Aurigen ControlNet pipeline.
 """
 import cv2
 import numpy as np
+import streamlit as st
 from PIL import Image
 
 
@@ -23,6 +24,7 @@ def detect_edges(image: Image.Image) -> Image.Image:
     return Image.fromarray(canny)
 
 
+@st.cache_data
 def preprocess_image(image_input, apply_edges: bool = True) -> Image.Image:
     """Load, optionally edge-detect, and resize an image for ControlNet input.
 
@@ -46,7 +48,9 @@ def preprocess_image(image_input, apply_edges: bool = True) -> Image.Image:
         # Unknown input type — fall back to white canvas (same as None case)
         image = Image.new("RGB", (1024, 1024), (255, 255, 255))
 
+    image = image.resize((1024, 1024))
+
     if apply_edges:
         image = detect_edges(image)
 
-    return image.resize((1024, 1024))
+    return image

@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import logging
@@ -290,13 +291,26 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
 #######################
 # Model Setup
 @st.cache_resource
 def get_pipeline():
-    return load_pipeline()
+    try:
+        return load_pipeline()
+    except Exception as e:
+        st.error(f"❌ Pipeline failed to load: {str(e)}")
+        return None
+
 
 pipe = get_pipeline()
+
+if pipe is None:
+    st.warning("⚠️ Click below to retry loading the model.")
+    if st.button("🔄 Retry Loading Model"):
+        st.cache_resource.clear()
+        st.rerun()
+    st.stop()
 
 #######################
 # Sidebar Controls
@@ -333,8 +347,13 @@ with st.sidebar:
 
     # Generation Settings
     st.markdown("---")
-    num_images = st.slider("Number of Designs", 1, 4, 2)
-    num_inference_steps = st.slider("Refinement Steps", 20, 100, 45)
+    num_images = st.slider("Number of Designs", 1, 4, 1)
+    resolution = st.select_slider(
+        "Output Resolution",
+        options=[512, 768, 1024],
+        value=768,
+    )
+    num_inference_steps = st.slider("Refinement Steps", 10, 50, 20)
     guidance_scale = st.slider("Prompt Adherence", 1.0, 20.0, 7.5)
 
 #######################
@@ -384,6 +403,8 @@ with col[1]:
                                     num_inference_steps=num_inference_steps,
                                     guidance_scale=guidance_scale,
                                     controlnet_conditioning_scale=conditioning_scale,
+                                    width=resolution,
+                                    height=resolution,
                                 ).images[0]
 
                                 # Update the design
@@ -407,6 +428,8 @@ with col[1]:
                     guidance_scale=guidance_scale,
                     num_images_per_prompt=num_images,
                     controlnet_conditioning_scale=conditioning_scale,
+                    width=resolution,
+                    height=resolution,
                 ).images
 
                 st.session_state.generated_images = images
@@ -442,4 +465,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("**System Status**")
 st.sidebar.write(f"Device: {'GPU 🔥' if torch.cuda.is_available() else 'CPU ⚙️'}")
 st.sidebar.write(f"Model: SDXL 1.0 + ControlNet")
-st.sidebar.write(f"Precision: {pipe.dtype}")
+st.sidebar.write(f"Precision: {pipe.dtype if pipe is not None else 'N/A'}")
+if st.sidebar.button("🔄 Reload Model"):
+    st.cache_resource.clear()
+    st.rerun()
