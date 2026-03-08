@@ -77,7 +77,7 @@ def load_pipeline():
     # Add torch.compile only if PyTorch >= 2.0 and CUDA is available
     if hasattr(torch, "compile") and torch.cuda.is_available():
         try:
-            import torch._dynamo
+            __import__("torch._dynamo")
             torch._dynamo.config.suppress_errors = True
             pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
             logger.info("torch.compile enabled on UNet")
