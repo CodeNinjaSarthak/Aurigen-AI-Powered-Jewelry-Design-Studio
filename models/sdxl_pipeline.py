@@ -73,15 +73,3 @@ def load_pipeline():
             )
     except Exception as exc:
         logger.warning("Failed to load UNet weights: %s — using base weights.", exc)
-
-    # Add torch.compile only if PyTorch >= 2.0 and CUDA is available
-    if hasattr(torch, "compile") and torch.cuda.is_available():
-        try:
-            __import__("torch._dynamo")
-            torch._dynamo.config.suppress_errors = True
-            pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
-            logger.info("torch.compile enabled on UNet")
-        except Exception as e:
-            logger.warning("torch.compile skipped: %s", e)
-
-    return pipe
