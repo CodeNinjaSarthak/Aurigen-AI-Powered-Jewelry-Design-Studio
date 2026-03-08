@@ -89,6 +89,7 @@ Aurigen/
 │   └── README.md               # Download instructions
 ├── Dataset/                    # Hosted on HuggingFace (not in repo)
 ├── Assets/                     # README images
+├── kaggle_streamlit_launcher.ipynb  # One-click Kaggle launcher (see below)
 ├── requirements.txt
 ├── .env.example
 └── README.md
@@ -216,6 +217,30 @@ drive.mount('/content/drive')
 > ⚙️ Set runtime to **T4 GPU** before running:
 > Runtime → Change runtime type → T4 GPU
 
+## ☁️ Run on Kaggle (Recommended — P100 GPU)
+
+`kaggle_streamlit_launcher.ipynb` is a self-contained notebook that sets up the full environment on a Kaggle P100 GPU and exposes the app publicly via ngrok — no local GPU required.
+
+**What it does, cell by cell:**
+
+| Step | Description |
+|---|---|
+| 1 | Clone repo |
+| 2 | Install dependencies not pre-bundled in Kaggle Docker |
+| 3 | Download fine-tuned UNet weights (~5.1 GB) from Google Drive |
+| 4 | Authenticate ngrok using a Kaggle secret (`NGROK_SECRET_KEY`) |
+| 5 | Fix nested directory created by `gdown --folder` |
+| 6 | Launch Streamlit on port 8501 + open public ngrok tunnel |
+| 7 | Health check — verify Streamlit process is still alive |
+
+**Setup:**
+1. Enable **GPU P100** and **Internet** in Kaggle session options
+2. Add your ngrok token as a Kaggle secret named `NGROK_SECRET_KEY` (Add-ons → Secrets)
+3. Open `kaggle_streamlit_launcher.ipynb` and run all cells in order
+4. The public URL appears after Step 6 — model loads on first visit (~2–3 min)
+
+---
+
 ## 👥 Contributors
 
 | Name | Roll No. | Contributions |
@@ -224,6 +249,21 @@ drive.mount('/content/drive')
 | **Sarthak Chauhan** | E22CSEU0054 | Model development · Bracelets dataset |
 | **Vrinda Singh Parmar** | E22CSEU0043 | Model development · Necklaces dataset |
 | **Shlok Bhardwaj** | E22CSEU0041 | Model development · Earrings dataset |
+
+---
+
+## ⚖️ License
+
+The source code in this repository is released under the **MIT License** — see [`LICENSE`](LICENSE) for details.
+
+The pre-trained model weights downloaded and used by this app are governed by their own licenses:
+
+| Model | License |
+|---|---|
+| [Stable Diffusion XL 1.0](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) | [CreativeML Open RAIL++-M](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/blob/main/LICENSE.md) |
+| [ControlNet Canny SDXL](https://huggingface.co/diffusers/controlnet-canny-sdxl-1.0) | [CreativeML Open RAIL++-M](https://huggingface.co/diffusers/controlnet-canny-sdxl-1.0/blob/main/LICENSE) |
+
+The RAIL++-M license permits research and personal use but **restricts certain commercial and harmful applications**. Please read the model licenses before deploying this project in any product.
 
 <div align="center">
   <sub>Built with ❤️ using Stable Diffusion XL · ControlNet · Streamlit</sub>
