@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import logging
@@ -290,11 +291,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
 #######################
 # Model Setup
 @st.cache_resource
 def get_pipeline():
     return load_pipeline()
+
 
 pipe = get_pipeline()
 
@@ -333,8 +336,13 @@ with st.sidebar:
 
     # Generation Settings
     st.markdown("---")
-    num_images = st.slider("Number of Designs", 1, 4, 2)
-    num_inference_steps = st.slider("Refinement Steps", 20, 100, 45)
+    num_images = st.slider("Number of Designs", 1, 4, 1)
+    resolution = st.select_slider(
+        "Output Resolution",
+        options=[512, 768, 1024],
+        value=768,
+    )
+    num_inference_steps = st.slider("Refinement Steps", 10, 50, 20)
     guidance_scale = st.slider("Prompt Adherence", 1.0, 20.0, 7.5)
 
 #######################
@@ -384,6 +392,8 @@ with col[1]:
                                     num_inference_steps=num_inference_steps,
                                     guidance_scale=guidance_scale,
                                     controlnet_conditioning_scale=conditioning_scale,
+                                    width=resolution,
+                                    height=resolution,
                                 ).images[0]
 
                                 # Update the design
@@ -407,6 +417,8 @@ with col[1]:
                     guidance_scale=guidance_scale,
                     num_images_per_prompt=num_images,
                     controlnet_conditioning_scale=conditioning_scale,
+                    width=resolution,
+                    height=resolution,
                 ).images
 
                 st.session_state.generated_images = images
