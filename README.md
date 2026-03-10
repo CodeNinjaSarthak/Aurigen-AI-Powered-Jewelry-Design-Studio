@@ -242,8 +242,8 @@ drive.mount('/content/drive')
 
 | Name | Roll No. | Contributions |
 |------|----------|---------------|
-| **Sidharth Patel** | E22CSEU0044 | Model development · Rings dataset |
 | **Sarthak Chauhan** | E22CSEU0054 | Model development · Bracelets dataset |
+| **Sidharth Patel** | E22CSEU0044 | Model development · Rings dataset |
 | **Vrinda Singh Parmar** | E22CSEU0043 | Model development · Necklaces dataset |
 | **Shlok Bhardwaj** | E22CSEU0041 | Model development · Earrings dataset |
 
