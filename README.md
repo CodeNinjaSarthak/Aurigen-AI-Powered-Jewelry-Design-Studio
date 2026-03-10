@@ -12,7 +12,7 @@
 **Generate photorealistic jewelry designs from text prompts or sketches
 using fine-tuned Stable Diffusion XL + ControlNet.**
 
-[📺 Watch Demo](https://drive.google.com/file/d/1UnwEjkt5vYjoJlum6DXiLO72CQdbBcFo/view?usp=sharing) ·
+[📺 Watch Demo](https://drive.google.com/file/d/1wlOlAmbYkNzWX6YOuXDQcwJ9tjATD1ir/view?usp=drive_link) ·
 [🤗 Dataset](https://huggingface.co/datasets/sidd707/jewelry-design-dataset) ·
 [⚖️ Model Weights](https://drive.google.com/drive/folders/13bx0xMu9Py2vFqFG8ocny2YVamw7EQOX?usp=sharing)
 
@@ -181,9 +181,12 @@ streamlit run app/controlnet_app.py
 ```
 
 <h3> Watch it in action: <h3>
-https://drive.google.com/file/d/1UnwEjkt5vYjoJlum6DXiLO72CQdbBcFo/view?usp=sharing
+https://drive.google.com/file/d/1wlOlAmbYkNzWX6YOuXDQcwJ9tjATD1ir/view?usp=drive_link
 
-https://github.com/user-attachments/assets/cd38b971-ac3b-485e-b4b5-b23f650ea11d
+
+
+https://github.com/user-attachments/assets/e1a3ccf0-1539-4ee0-ba56-af7423524338
+
 
 
 <h3>Download the trained model from below link and place it in fine-tuned-weights folder</h3>
